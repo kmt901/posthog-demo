@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block title %}Sign Up{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Sign Up</h2>
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card form-container">
+                <div class="card-body">
+                    <form method="post" action="{{ url_for('signup') }}">
+                        {{ form.hidden_tag() }}
+                        <div class="form-group">
+                            {{ form.username.label(class="form-control-label") }}
+                            {{ form.username(class="form-control input-field") }}
+                        </div>
+                        <div class="form-group">
+                            {{ form.email.label(class="form-control-label") }}
+                            {{ form.email(class="form-control input-field") }}
+                        </div>
+                        <div class="form-group">
+                            {{ form.password.label(class="form-control-label") }}
+                            {{ form.password(class="form-control input-field") }}
+                        </div>
+                        <div class="form-group">
+                            {{ form.password2.label(class="form-control-label") }}
+                            {{ form.password2(class="form-control input-field") }}
+                        </div>
+                        <input type="hidden" id="plan_input" name="plan" value="">
+
+
+                        <div class="form-group text-center">
+                            {{ form.submit(class="btn btn-primary btn-lg btn-red") }}
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h3 class="text-center mt-5">Select a Plan</h3>
+    <div class="row mt-3 justify-content-center">
+        <div class="col-md-4">
+            <div class="card text-center plan-card" id="card_free" onclick="selectPlan('Free')">
+                <img src="{{ url_for('static', filename='images/free_plan.png') }}" class="card-img-top" alt="Free Plan">
+                <div class="overlay"></div>
+                <div class="card-body">
+                    <h5 class="card-title">Free Plan</h5>
+                    <p class="card-text">Enjoy a limited selection of movies and shows for free.</p>
+                    <button class="btn btn-outline-primary btn-block mt-3 btn-red" type="button">SELECT THIS</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-center plan-card" id="card_premium" onclick="selectPlan('Premium')">
+                <img src="{{ url_for('static', filename='images/premium_plan.png') }}" class="card-img-top" alt="Premium Plan">
+                <div class="overlay"></div>
+                <div class="card-body">
+                    <h5 class="card-title">Premium Plan</h5>
+                    <p class="card-text">Access to all movies and shows, including premium content.</p>
+                    <button class="btn btn-outline-primary btn-block mt-3 btn-red" type="button">SELECT THIS</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-center plan-card" id="card_maximal" onclick="selectPlan('Max-imal')">
+                <img src="{{ url_for('static', filename='images/max_imal_plan.png') }}" class="card-img-top" alt="Max-imal Plan">
+                <div class="overlay"></div>
+                <div class="card-body">
+                    <h5 class="card-title">Max-imal Plan</h5>
+                    <p class="card-text">Get everything in Premium plus exclusive content and features.</p>
+                    <button class="btn btn-outline-primary btn-block mt-3 btn-red" type="button">SELECT THIS</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script>
+document.querySelector('form').addEventListener('submit', function(event) {
+    var planValue = document.getElementById('plan_input').value;
+    if (!planValue) {
+        event.preventDefault();
+        alert('Please select a plan before submitting.');
+    }
+});
+
+function selectPlan(plan) {
+    document.getElementById('plan_input').value = plan;
+    document.querySelectorAll('.plan-card').forEach(card => {
+        card.classList.remove('border-danger');
+        card.querySelector('.overlay').style.opacity = '0.6';
+    });
+    const selectedCard = document.getElementById('card_' + plan.toLowerCase().replace('-', ''));
+    selectedCard.classList.add('border-danger');
+    selectedCard.querySelector('.overlay').style.opacity = '0';
+    console.log(`Plan selected: ${plan}`);
+}
+</script>
+{% endblock %}

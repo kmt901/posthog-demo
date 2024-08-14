@@ -1,0 +1,179 @@
+/* General Styles */
+body {
+    background-color: #000;
+    color: #fff;
+}
+
+.navbar-brand {
+    color: #e50914 !important;
+}
+
+/* Card Styles */
+.card {
+    background-color: #333;
+    border: none;
+    position: relative;
+    overflow: hidden;
+}
+
+.card-title {
+    color: #e50914;
+}
+
+.card img {
+    transition: transform 0.3s ease;
+}
+
+.card:hover img {
+    transform: scale(1.05);
+}
+
+.card .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.9);
+    opacity: 0.8;
+    transition: opacity 0.3s ease;
+}
+
+.card:hover .overlay {
+    opacity: 0;
+}
+
+.card-body {
+    z-index: 2;
+    position: relative;
+}
+
+/* Button Styles */
+.btn-danger {
+    background-color: #e50914;
+    border-color: #e50914;
+}
+
+.btn-danger:hover {
+    background-color: #b20710;
+    border-color: #b20710;
+}
+
+.btn-red {
+    background-color: red;
+    border-color: red;
+    color: white;
+}
+
+.btn-red:hover {
+    background-color: #b20710;
+    border-color: #b20710;
+}
+
+/* Navbar Styles */
+.navbar .form-inline {
+    display: flex;
+    align-items: center;
+}
+
+.navbar .form-inline .form-control {
+    background-color: #333333;
+    border: 1px solid #e50914;
+    color: #fff;
+    border-radius: 4px 0 0 4px;
+}
+
+.navbar .form-inline .btn-outline-success {
+    background-color: #e50914;
+    border-color: #e50914;
+    color: #fff;
+    border-radius: 0 4px 4px 0;
+    margin-left: -1px;
+}
+
+.navbar .form-inline .btn-outline-success:hover {
+    background-color: #b20710;
+    border-color: #b20710;
+}
+
+/* Form Container Styles */
+.form-container {
+    max-width: 400px;
+    margin: auto;
+    padding: 2rem;
+    background-color: #333;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.form-container .form-control {
+    background-color: #444;
+    border: 1px solid #e50914;
+    color: #e50914;
+}
+
+.form-container .btn-primary {
+    background-color: #e50914;
+    border-color: #e50914;
+    color: #fff;
+}
+
+.form-container .btn-primary:hover {
+    background-color: #b20710;
+    border-color: #b20710;
+}
+
+.form-container h2 {
+    color: #e50914;
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+/* Input Field Styles */
+.input-field {
+    background-color: #333;
+    color: red;
+    border: 2px solid red;
+}
+
+.input-field::placeholder {
+    color: red;
+}
+
+/* Highlighted Card Border */
+.border-danger {
+    border: 2px solid red !important;
+}
+
+/* Plan Card Styles */
+.plan-card {
+    cursor: pointer;
+}
+
+.plan-card .btn {
+    cursor: pointer;
+}
+
+.nav-item.dropdown:hover .dropdown-menu {
+    display: block;
+}
+
+.custom-dropdown {
+    background-color: #444;
+    border: 1px solid red;
+    
+}
+
+.custom-dropdown-item {
+    color: white; 
+}
+
+.custom-dropdown-item:hover {
+    background-color: #444; 
+    color: red;
+}
+
+.custom-dropdown-divider {
+    border-color: red;
+}
+

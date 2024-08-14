@@ -1,0 +1,42 @@
+/* Custom styles for the profile page */
+.plan-card {
+    cursor: pointer;
+}
+
+.plan-card .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    transition: opacity 0.3s ease;
+}
+
+.plan-card.border-danger .overlay {
+    opacity: 0;
+}
+
+.plan-card img {
+    width: 100%;
+    border-radius: 5px 5px 0 0;
+}
+
+.plan-card .card-body {
+    position: relative;
+}
+
+.form-group label {
+    font-weight: bold;
+}
+
+.btn-red {
+    background-color: #ff0000;
+    border-color: #ff0000;
+    color: #fff;
+}
+
+.btn-red:hover {
+    background-color: #b30000;
+    border-color: #b30000;
+}

@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Movie Catalogue</h1>
+{% if query %}
+<p>Search results for: <strong>{{ query }}</strong></p>
+{% endif %}
+<div class="row">
+    {% for movie in movies %}
+    <div class="col-md-4 mb-4">
+        <div class="card">
+            <img src="{{ movie.image_url }}" class="card-img-top" alt="{{ movie.title }}">
+            <div class="overlay"></div>
+            <div class="card-body">
+                <h5 class="card-title">{{ movie.title }}</h5>
+                <p class="card-text">{{ movie.description }}</p>
+                <a href="/movie/{{ movie.id }}" class="btn btn-danger">Watch Now</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
+
+
+
+
+
+
+

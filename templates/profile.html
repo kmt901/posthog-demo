@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Profile - {{ user.username }}
+{% endblock %}
+
+{% block head %}
+<!-- Load custom CSS -->
+<link rel="stylesheet" href="{{ url_for('static', filename='css/profile.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1>Profile</h1>
+    <div class="card mb-4">
+        <div class="card-header">
+            {{ user.username }}'s Profile
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">Email: {{ user.email }}</h5>
+            <p class="card-text">Current Subscription Plan: <span id="currentPlan">{{ user.plan }}</span></p>
+            <a href="{{ url_for('settings') }}" class="btn btn-primary btn-red">Settings</a>
+        </div>
+    </div>
+
+    <h3>Change Subscription Plan</h3>
+    <form method="post" action="{{ url_for('change_plan') }}">
+        {{ form.hidden_tag() }}
+        <input type="hidden" name="plan" id="plan_input" value="{{ user.plan }}">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card text-center plan-card" id="card_free" onclick="selectPlan('Free')">
+                    <img src="{{ url_for('static', filename='images/free_plan.png') }}" class="card-img-top" alt="Free Plan">
+                    <div class="overlay"></div>
+                    <div class="card-body">
+                        <h5 class="card-title">Free Plan</h5>
+                        <p class="card-text">Enjoy a limited selection of movies and shows for free.</p>
+                        <button class="btn btn-outline-primary btn-block mt-3 btn-red" type="button">SELECT Mehh</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-center plan-card" id="card_premium" onclick="selectPlan('Premium')">
+                    <img src="{{ url_for('static', filename='images/premium_plan.png') }}" class="card-img-top" alt="Premium Plan">
+                    <div class="overlay"></div>
+                    <div class="card-body">
+                        <h5 class="card-title">Premium Plan</h5>
+                        <p class="card-text">Access to all movies and shows, including premium content.</p>
+                        <button class="btn btn-outline-primary btn-block mt-3 btn-red" type="button">SELECT Okay Option</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-center plan-card" id="card_maximal" onclick="selectPlan('Maximal')">
+                    <img src="{{ url_for('static', filename='images/max_imal_plan.png') }}" class="card-img-top" alt="Max-imal Plan">
+                    <div class="overlay"></div>
+                    <div class="card-body">
+                        <h5 class="card-title">Max-imal Plan</h5>
+                        <p class="card-text">Get everything in Premium plus exclusive content and features.</p>
+                        <button class="btn btn-outline-primary btn-block mt-3 btn-red" type="button">SELECT MAXXXX</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group text-center mt-4">
+            <button type="submit" class="btn btn-primary btn-red">Change Plan</button>
+        </div>
+    </form>
+
+    <h3 class="mt-5">Movies Watched</h3>
+    <div class="form-group">
+        <label for="timeFrameSelect">Select Time Frame:</label>
+        <select class="form-control" id="timeFrameSelect">
+            <option value="week">Week</option>
+            <option value="month">Month</option>
+            <option value="year">Year</option>
+        </select>
+    </div>
+    <canvas id="moviesWatchedChart"></canvas>
+
+    <script id="weekStats" type="application/json">{{ stats_week|tojson }}</script>
+    <script id="monthStats" type="application/json">{{ stats_month|tojson }}</script>
+    <script id="yearStats" type="application/json">{{ stats_year|tojson }}</script>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="{{ url_for('static', filename='js/profile.js') }}"></script>
+<script>
+function selectPlan(planName) {
+    document.getElementById('plan_input').value = planName;
+    console.log("Selected plan: " + planName);  
+}
+</script>
+{% endblock %}

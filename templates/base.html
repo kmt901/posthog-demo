@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <title>{% block title %}Hogflix{% endblock %}</title>
+    <!-- PostHog Initialization Script -->
+    <script>
+        !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(o=t.createElement("script")).type="text/javascript",o.async=!0,o.src=s.api_host+"/static/array.js",(n=t.getElementsByTagName("script")[0]).parentNode.insertBefore(o,n);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},p="capture identify alias people.set people.set_once people.unset people.increment people.append people.union people.track_charge people.clear_charges people.delete_user".split(" "),r=0;r<p.length;r++)g(u,p[r]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+        posthog.init('phc_VJnSeuzLa91xwVOxMOkFyAoEVabYBVFge1MIlBxdFTw', { api_host: 'https://us.i.posthog.com' });
+    </script>
+    {% if request.cookies.posthog_js %}
+    {{ request.cookies.posthog_js | safe }}
+    {% endif %}
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="/">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Hogflix Logo" style="height: 40px;">
+        </a>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <form class="form-inline ml-auto" action="{{ url_for('search') }}" method="post">
+                <input class="form-control" type="search" placeholder="Search" aria-label="Search" name="query">
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+            </form>
+            <ul class="navbar-nav ml-auto">
+                {% if current_user.is_authenticated %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Welcome back to Hogflix, {{ current_user.email }}
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right custom-dropdown" aria-labelledby="userDropdown">
+                        <a class="dropdown-item custom-dropdown-item" href="{{ url_for('profile') }}">My Profile</a>
+                        <a class="dropdown-item custom-dropdown-item" href="https://posthog.com" target="_blank">PostHog</a>
+                        <div class="dropdown-divider custom-dropdown-divider"></div>
+                        <a class="dropdown-item custom-dropdown-item" href="{{ url_for('logout') }}">Logout</a>
+                    </div>
+                </li>
+                {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('signup') }}">Sign Up</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('login') }}">Login</a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+    <div class="container mt-4">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}" role="alert">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        {% block content %}{% endblock %}
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.4.0/dist/confetti.browser.min.js"></script>
+    <script src="{{ url_for('static', filename='js/confetti.js') }}"></script>
+</body>
+</html>

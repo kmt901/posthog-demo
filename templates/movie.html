@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}{{ movie.title }}{% endblock %}
+
+{% block content %}
+<div class="text-center">
+    <h1>{{ movie.title }}</h1>
+    <p>{{ movie.description }}</p>
+    <div class="embed-responsive embed-responsive-16by9">
+        <iframe class="embed-responsive-item" src="{{ movie.youtube_link }}" allowfullscreen></iframe>
+    </div>
+    <a href="/" class="btn btn-secondary mt-3">Back to Catalogue</a>
+</div>
+{% endblock %}
