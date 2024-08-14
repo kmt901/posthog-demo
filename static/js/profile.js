@@ -50,9 +50,9 @@ function updatePlan(plan) {
 
             posthog.capture('plan_changed', { 
                 new_plan: plan,
-                previous_plan: document.getElementById('currentPlan').textContent.trim()
+                previous_plan: document.getElementById('currentPlan').textContent.trim() // trim removes post and ad whitespaces
             });
-            
+
             showSuccessModal(plan);
             document.getElementById('currentPlan').textContent = plan;
         } else {

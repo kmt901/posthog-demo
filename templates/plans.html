@@ -9,6 +9,39 @@
 {% endblock %}
 
 {% block content %}
+<style>
+    .plan-card .price {
+        font-size: 1.5em !important;
+        font-weight: bold !important;
+        display: inline-block;
+    }
+
+    .plan-card .price-free {
+        color: red !important;
+    }
+
+    .plan-card .price-premium {
+        color: red !important;
+        animation: pulsate 1.5s infinite alternate;
+    }
+
+    .plan-card .price-maximal {
+        color: red !important;
+        animation: pulsate 0.75s infinite alternate;
+    }
+
+    @keyframes pulsate {
+        0% {
+            transform: scale(1);
+            text-shadow: 0 0 0 rgba(255, 0, 0, 0);
+        }
+        100% {
+            transform: scale(1.1);
+            text-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+        }
+    }
+</style>
+
 <div class="container mt-5">
     <h1>Our Awesome Subscriptions</h1>
     <div class="row">
@@ -18,7 +51,7 @@
                 <div class="card-body">
                     <h5 class="card-title">Free Plan</h5>
                     <p class="card-text">Enjoy a limited selection of movies and shows for free.</p>
-                    <p class="card-text"><strong>Price: $0/month</strong></p>
+                    <p class="card-text"><span class="price price-free">$0/month</span></p>
                 </div>
             </div>
         </div>
@@ -28,7 +61,7 @@
                 <div class="card-body">
                     <h5 class="card-title">Premium Plan</h5>
                     <p class="card-text">Access to all movies and shows, including premium content.</p>
-                    <p class="card-text"><strong>Price: $9.99/month</strong></p>
+                    <p class="card-text"><span class="price price-premium">$9.99/month</span></p>
                 </div>
             </div>
         </div>
@@ -38,11 +71,10 @@
                 <div class="card-body">
                     <h5 class="card-title">Max-imal Plan</h5>
                     <p class="card-text">Get everything in Premium plus exclusive content and features. And Ultra HD</p>
-                    <p class="card-text"><strong>Price: $19.99/month</strong></p>
+                    <p class="card-text"><span class="price price-maximal">$19.99/month</span></p>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
 {% endblock %}
