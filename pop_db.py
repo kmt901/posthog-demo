@@ -2,7 +2,7 @@ from app import app, db
 from models import Movie
 
 with app.app_context():
-    db.create_all()  # Ensure all tables are created
+    db.create_all()  
 
     movie1 = Movie(
         title="Movie 1", 
