@@ -76,25 +76,32 @@
         </div>
     </div>
 
-<script>
-document.querySelector('form').addEventListener('submit', function(event) {
-    var planValue = document.getElementById('plan_input').value;
-    if (!planValue) {
-        event.preventDefault();
-        alert('Please select a plan before submitting.');
-    }
-});
-
-function selectPlan(plan) {
-    document.getElementById('plan_input').value = plan;
-    document.querySelectorAll('.plan-card').forEach(card => {
-        card.classList.remove('border-danger');
-        card.querySelector('.overlay').style.opacity = '0.6';
-    });
-    const selectedCard = document.getElementById('card_' + plan.toLowerCase().replace('-', ''));
-    selectedCard.classList.add('border-danger');
-    selectedCard.querySelector('.overlay').style.opacity = '0';
-    console.log(`Plan selected: ${plan}`);
-}
-</script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var preselectedPlan = "{{ preselected_plan }}";
+            if (preselectedPlan) {
+                selectPlan(preselectedPlan);
+            }
+        
+            document.querySelector('form').addEventListener('submit', function(event) {
+                var planValue = document.getElementById('plan_input').value;
+                if (!planValue) {
+                    event.preventDefault();
+                    alert('Please select a plan before submitting.');
+                }
+            });
+        });
+        
+        function selectPlan(plan) {
+            document.getElementById('plan_input').value = plan;
+            document.querySelectorAll('.plan-card').forEach(card => {
+                card.classList.remove('border-danger');
+                card.querySelector('.overlay').style.opacity = '0.6';
+            });
+            const selectedCard = document.getElementById('card_' + plan.toLowerCase().replace('-', ''));
+            selectedCard.classList.add('border-danger');
+            selectedCard.querySelector('.overlay').style.opacity = '0';
+            console.log(`Plan selected: ${plan}`);
+        }
+        </script>
 {% endblock %}
