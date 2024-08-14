@@ -11,15 +11,19 @@ function selectPlan(plan) {
 
     console.log("Plan selected: " + plan);
 
+
     showConfirmationModal(plan);
 }
 
 function showConfirmationModal(plan) {
     const modal = $('#confirmationModal');
     const modalBody = $('#modalBody');
+    const confirmButton = $('#confirmButton');
+
     modalBody.text(`Are you sure you want to change your plan to ${plan}?`);
     
-    $('#confirmButton').off('click').on('click', function() {
+    confirmButton.show();
+    confirmButton.off('click').on('click', function() {
         updatePlan(plan);
         modal.modal('hide');
     });
@@ -30,7 +34,7 @@ function showConfirmationModal(plan) {
 function updatePlan(plan) {
     const formData = new FormData();
     formData.append('plan', plan);
-    formData.append('csrf_token', csrfToken); 
+    formData.append('csrf_token', csrfToken);  
 
     fetch('/profile', {
         method: 'POST',
@@ -43,6 +47,12 @@ function updatePlan(plan) {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
+
+            posthog.capture('plan_changed', { 
+                new_plan: plan,
+                previous_plan: document.getElementById('currentPlan').textContent.trim()
+            });
+            
             showSuccessModal(plan);
             document.getElementById('currentPlan').textContent = plan;
         } else {
@@ -58,16 +68,20 @@ function updatePlan(plan) {
 function showSuccessModal(plan) {
     const modal = $('#confirmationModal');
     const modalBody = $('#modalBody');
+    const confirmButton = $('#confirmButton');
+
     modalBody.text(`Your plan has been successfully updated to ${plan}!`);
-    $('#confirmButton').hide();
+    confirmButton.hide();
     modal.modal('show');
 }
 
 function showErrorModal() {
     const modal = $('#confirmationModal');
     const modalBody = $('#modalBody');
+    const confirmButton = $('#confirmButton');
+
     modalBody.text('Failed to update plan. Please try again.');
-    $('#confirmButton').hide();
+    confirmButton.hide();
     modal.modal('show');
 }
 
@@ -137,6 +151,7 @@ document.addEventListener('DOMContentLoaded', function () {
         let timeFrame = this.value;
         updateChart(timeFrame);
     });
+
 
     const currentPlan = document.getElementById('currentPlan').textContent.trim();
     if (currentPlan) {

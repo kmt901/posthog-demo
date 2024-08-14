@@ -145,7 +145,6 @@ def profile():
         if not request.headers.get('X-Requested-With') == 'XMLHttpRequest':
             return redirect(url_for('profile'))
 
-    # Load the user's movie stats for the profile page
     stats_week = [stat.to_dict() for stat in MovieStats.query.filter_by(user_id=current_user.id, time_frame='week').all()]
     stats_month = [stat.to_dict() for stat in MovieStats.query.filter_by(user_id=current_user.id, time_frame='month').all()]
     stats_year = [stat.to_dict() for stat in MovieStats.query.filter_by(user_id=current_user.id, time_frame='year').all()]
