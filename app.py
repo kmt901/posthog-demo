@@ -45,6 +45,9 @@ def movie(movie_id):
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     form = SignupForm()
+    # Get the plan from the URL parameter
+    preselected_plan = request.args.get('plan')
+
     if request.method == 'POST':
         app.logger.debug(f"Form data received: {request.form}")
         plan = request.form.get('plan')
@@ -67,7 +70,7 @@ def signup():
                 flash('Please select a plan.', 'error')
             app.logger.debug(f"Form validation failed. Errors: {form.errors}")
     
-    return render_template('signup.html', form=form)
+    return render_template('signup.html', form=form, preselected_plan=preselected_plan)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -161,6 +164,10 @@ def settings():
 def plans():
     return render_template('plans.html', user=current_user)
 
+@app.route('/fourohfour', methods=['GET'])
+def fourohfour():
+    return render_template('404.html', user=current_user)
+
 @app.route('/blog')
 def blog():
     posts = BlogPost.query.order_by(BlogPost.timestamp.desc()).all()
@@ -189,6 +196,9 @@ def create_post():
         return redirect(url_for('blog'))
     return render_template('create_post.html', form=form)
 
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404
 
 @app.route('/toc')
 def toc():

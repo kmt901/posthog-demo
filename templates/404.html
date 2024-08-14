@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block title %}
+    404 - Page Not Found
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5 text-center">
+    <h1 class="text-white">404 - Max got lost!</h1>
+    <img src="{{ url_for('static', filename='images/404.png') }}" alt="404 Image" class="img-fluid" style="max-width: 50%; display: block; margin: 0 auto;">
+    <p class="text-white mt-3">It seems the page you're looking for doesn't exist.</p>
+</div>
+{% endblock %}

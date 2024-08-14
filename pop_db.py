@@ -38,4 +38,4 @@ with app.app_context():
 
     db.session.commit()
 
-    print("Movies and admin user added to the database!")
+    print("Movies and admin user added to the database! Yay.")
