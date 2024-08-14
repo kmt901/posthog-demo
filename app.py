@@ -1,8 +1,8 @@
 import logging
 from flask import Flask, render_template, redirect, url_for, flash, request, jsonify, make_response
 from config import DevelopmentConfig
-from models import db, User, Movie, MovieStats
-from forms import SignupForm, LoginForm, ChangePlanForm
+from models import db, User, Movie, MovieStats, BlogPost
+from forms import SignupForm, LoginForm, ChangePlanForm, BlogPostForm
 from flask_migrate import Migrate
 from flask_login import LoginManager, current_user, login_user, logout_user, login_required
 from flask_wtf.csrf import CSRFProtect
@@ -144,6 +144,27 @@ def settings():
     if request.method == 'POST':
         pass
     return render_template('settings.html', user=current_user)
+
+@app.route('/plans', methods=['GET'])
+def plans():
+    return render_template('plans.html', user=current_user)
+
+@app.route('/blog')
+def blog():
+    posts = BlogPost.query.order_by(BlogPost.timestamp.desc()).all()
+    return render_template('blog.html', posts=posts)
+
+@app.route('/create_post', methods=['GET', 'POST'])
+@login_required
+def create_post():
+    form = BlogPostForm()
+    if form.validate_on_submit():
+        post = BlogPost(title=form.title.data, content=form.content.data)
+        db.session.add(post)
+        db.session.commit()
+        flash('Blog post created successfully!', 'success')
+        return redirect(url_for('blog'))
+    return render_template('create_post.html', form=form)
 
 @app.route('/change_plan', methods=['POST'])
 @login_required

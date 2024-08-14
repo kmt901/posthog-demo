@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Blog
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1>Blog</h1>
+    {% for post in posts %}
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">{{ post.title }}</h5>
+                <p class="card-text">{{ post.content }}</p>
+                <p class="card-text"><small class="text-muted">Published on {{ post.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</small></p>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}
