@@ -103,7 +103,7 @@ def logout():
     return redirect(url_for('index'))
 
 @app.route('/search', methods=['POST'])
-@csrf.exempt  # Disable CSRF for this route
+@csrf.exempt  # Disable CSRF for this route for debugging. 
 def search():
     query = request.form.get('query')
     posthog.capture('search', 'search_performed', {'query': query})
@@ -118,26 +118,39 @@ def search_results():
 @app.route('/profile', methods=['GET', 'POST'])
 @login_required
 def profile():
-    form = ChangePlanForm()  
+    form = ChangePlanForm()
 
-    if form.validate_on_submit():
-        new_plan = form.plan.data
-        if new_plan:
+    if request.method == 'POST':
+        new_plan = request.form.get('plan')
+        app.logger.debug(f"Plan to update: {new_plan}")
+        if new_plan in ['Free', 'Premium', 'Max-imal']:
             current_user.plan = new_plan
-            db.session.commit()
-            posthog.capture(current_user.email, 'plan_changed', {'new_plan': new_plan})
-            flash('Your subscription plan has been updated!')
+            try:
+                db.session.commit()
+                app.logger.debug(f"User plan updated to: {new_plan}")
+                flash('Your subscription plan has been updated!')
+                if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                    return jsonify({'success': True})
+            except Exception as e:
+                db.session.rollback()
+                app.logger.error(f"Error updating plan: {e}")
+                flash('An error occurred while updating your plan. Please try again.', 'danger')
+                if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                    return jsonify({'success': False})
         else:
             flash('Please select a valid plan.', 'danger')
-        return redirect(url_for('profile'))
-    
+            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                return jsonify({'success': False})
+        
+        if not request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            return redirect(url_for('profile'))
+
+    # Load the user's movie stats for the profile page
     stats_week = [stat.to_dict() for stat in MovieStats.query.filter_by(user_id=current_user.id, time_frame='week').all()]
     stats_month = [stat.to_dict() for stat in MovieStats.query.filter_by(user_id=current_user.id, time_frame='month').all()]
     stats_year = [stat.to_dict() for stat in MovieStats.query.filter_by(user_id=current_user.id, time_frame='year').all()]
-    
+
     return render_template('profile.html', user=current_user, form=form, stats_week=stats_week, stats_month=stats_month, stats_year=stats_year)
-
-
 @app.route('/settings', methods=['GET', 'POST'])
 @login_required
 def settings():
@@ -166,18 +179,10 @@ def create_post():
         return redirect(url_for('blog'))
     return render_template('create_post.html', form=form)
 
-@app.route('/change_plan', methods=['POST'])
-@login_required
-def change_plan():
-    new_plan = request.form.get('plan')
-    if new_plan:
-        current_user.plan = new_plan
-        db.session.commit()
-        posthog.capture(current_user.email, 'plan_changed', {'new_plan': new_plan})
-        flash('Your subscription plan has been updated!')
-    else:
-        flash('Please select a valid plan.', 'danger')
-    return redirect(url_for('profile'))
+
+@app.route('/toc')
+def toc():
+    return render_template('toc.html')
 
 if __name__ == '__main__':
     app.run(debug=True)

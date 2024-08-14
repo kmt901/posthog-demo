@@ -10,5 +10,6 @@ RUN pip3 install -r requirements.txt
 COPY . . 
 
 RUN python pop_db.py
+RUN python dummy_data.py
 
 CMD [ "flask", "run", "--host=0.0.0.0"]

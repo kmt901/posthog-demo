@@ -40,3 +40,24 @@
     background-color: #b30000;
     border-color: #b30000;
 }
+
+.dark-modal {
+    background-color: #333;
+    color: white;
+}
+
+.dark-modal .modal-header {
+    border-bottom: 1px solid #555;
+}
+
+.dark-modal .modal-footer {
+    border-top: 1px solid #555;
+}
+
+.dark-modal .close {
+    color: white;
+}
+
+.dark-modal .btn-outline-light:hover {
+    color: #333;
+}

@@ -24,49 +24,42 @@
     </div>
 
     <h3>Change Subscription Plan</h3>
-    <form method="post" action="{{ url_for('change_plan') }}">
-        {{ form.hidden_tag() }}
-        <input type="hidden" name="plan" id="plan_input" value="{{ user.plan }}">
-        <div class="row">
-            <div class="col-md-4">
-                <div class="card text-center plan-card" id="card_free" onclick="selectPlan('Free')">
-                    <img src="{{ url_for('static', filename='images/free_plan.png') }}" class="card-img-top" alt="Free Plan">
-                    <div class="overlay"></div>
-                    <div class="card-body">
-                        <h5 class="card-title">Free Plan</h5>
-                        <p class="card-text">Enjoy a limited selection of movies and shows for free.</p>
-                        <button class="btn btn-outline-primary btn-block mt-3 btn-red" type="button">SELECT Mehh</button>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card text-center plan-card" id="card_premium" onclick="selectPlan('Premium')">
-                    <img src="{{ url_for('static', filename='images/premium_plan.png') }}" class="card-img-top" alt="Premium Plan">
-                    <div class="overlay"></div>
-                    <div class="card-body">
-                        <h5 class="card-title">Premium Plan</h5>
-                        <p class="card-text">Access to all movies and shows, including premium content.</p>
-                        <button class="btn btn-outline-primary btn-block mt-3 btn-red" type="button">SELECT Okay Option</button>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card text-center plan-card" id="card_maximal" onclick="selectPlan('Maximal')">
-                    <img src="{{ url_for('static', filename='images/max_imal_plan.png') }}" class="card-img-top" alt="Max-imal Plan">
-                    <div class="overlay"></div>
-                    <div class="card-body">
-                        <h5 class="card-title">Max-imal Plan</h5>
-                        <p class="card-text">Get everything in Premium plus exclusive content and features.</p>
-                        <button class="btn btn-outline-primary btn-block mt-3 btn-red" type="button">SELECT MAXXXX</button>
-                    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card text-center plan-card" id="card_free" data-plan="Free">
+                <img src="{{ url_for('static', filename='images/free_plan.png') }}" class="card-img-top" alt="Free Plan">
+                <div class="overlay"></div>
+                <div class="card-body">
+                    <h5 class="card-title">Free Plan</h5>
+                    <p class="card-text">Enjoy a limited selection of movies and shows for free.</p>
+                    <button type="button" class="btn btn-outline-primary btn-block mt-3 btn-red" onclick="selectPlan('Free')">SELECT Mehh</button>
                 </div>
             </div>
         </div>
-        <div class="form-group text-center mt-4">
-            <button type="submit" class="btn btn-primary btn-red">Change Plan</button>
+        <div class="col-md-4">
+            <div class="card text-center plan-card" id="card_premium" data-plan="Premium">
+                <img src="{{ url_for('static', filename='images/premium_plan.png') }}" class="card-img-top" alt="Premium Plan">
+                <div class="overlay"></div>
+                <div class="card-body">
+                    <h5 class="card-title">Premium Plan</h5>
+                    <p class="card-text">Access to all movies and shows, including premium content.</p>
+                    <button type="button" class="btn btn-outline-primary btn-block mt-3 btn-red" onclick="selectPlan('Premium')">SELECT Okay Option</button>
+                </div>
+            </div>
         </div>
-    </form>
-
+        <div class="col-md-4">
+            <div class="card text-center plan-card" id="card_maximal" data-plan="Max-imal">
+                <img src="{{ url_for('static', filename='images/max_imal_plan.png') }}" class="card-img-top" alt="Max-imal Plan">
+                <div class="overlay"></div>
+                <div class="card-body">
+                    <h5 class="card-title">Max-imal Plan</h5>
+                    <p class="card-text">Get everything in Premium plus exclusive content and features.</p>
+                    <button type="button" class="btn btn-outline-primary btn-block mt-3 btn-red" onclick="selectPlan('Max-imal')">SELECT MAXXXX</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
     <h3 class="mt-5">Movies Watched</h3>
     <div class="form-group">
         <label for="timeFrameSelect">Select Time Frame:</label>
@@ -83,12 +76,31 @@
     <script id="yearStats" type="application/json">{{ stats_year|tojson }}</script>
 </div>
 
+
+<div class="modal fade" id="confirmationModal" tabindex="-1" role="dialog" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content dark-modal" style="background-color: #333; color: white;">
+            <div class="modal-header" style="border-bottom: 1px solid #555;">
+                <h5 class="modal-title" id="confirmationModalLabel">Plan Update</h5>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- msg here, comes from the js -->
+            </div>
+            <div class="modal-footer" style="border-top: 1px solid #555;">
+                <button type="button" class="btn btn-outline-light" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-danger" id="confirmButton">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var csrfToken = "{{ csrf_token() }}";
+</script>
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="{{ url_for('static', filename='js/profile.js') }}"></script>
-<script>
-function selectPlan(planName) {
-    document.getElementById('plan_input').value = planName;
-    console.log("Selected plan: " + planName);  
-}
-</script>
 {% endblock %}

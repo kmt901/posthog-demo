@@ -1,3 +1,76 @@
+function selectPlan(plan) {
+    document.querySelectorAll('.plan-card').forEach(card => {
+        card.classList.remove('border-danger');
+        card.querySelector('.overlay').style.opacity = '0.6';
+    });
+    const selectedCard = document.querySelector(`.plan-card[data-plan="${plan}"]`);
+    if (selectedCard) {
+        selectedCard.classList.add('border-danger');
+        selectedCard.querySelector('.overlay').style.opacity = '0';
+    }
+
+    console.log("Plan selected: " + plan);
+
+    showConfirmationModal(plan);
+}
+
+function showConfirmationModal(plan) {
+    const modal = $('#confirmationModal');
+    const modalBody = $('#modalBody');
+    modalBody.text(`Are you sure you want to change your plan to ${plan}?`);
+    
+    $('#confirmButton').off('click').on('click', function() {
+        updatePlan(plan);
+        modal.modal('hide');
+    });
+    
+    modal.modal('show');
+}
+
+function updatePlan(plan) {
+    const formData = new FormData();
+    formData.append('plan', plan);
+    formData.append('csrf_token', csrfToken); 
+
+    fetch('/profile', {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+            'X-CSRFToken': csrfToken  
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showSuccessModal(plan);
+            document.getElementById('currentPlan').textContent = plan;
+        } else {
+            showErrorModal();
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showErrorModal();
+    });
+}
+
+function showSuccessModal(plan) {
+    const modal = $('#confirmationModal');
+    const modalBody = $('#modalBody');
+    modalBody.text(`Your plan has been successfully updated to ${plan}!`);
+    $('#confirmButton').hide();
+    modal.modal('show');
+}
+
+function showErrorModal() {
+    const modal = $('#confirmationModal');
+    const modalBody = $('#modalBody');
+    modalBody.text('Failed to update plan. Please try again.');
+    $('#confirmButton').hide();
+    modal.modal('show');
+}
+
 document.addEventListener('DOMContentLoaded', function () {
     const weekStats = JSON.parse(document.getElementById('weekStats').textContent);
     const monthStats = JSON.parse(document.getElementById('monthStats').textContent);
@@ -65,18 +138,12 @@ document.addEventListener('DOMContentLoaded', function () {
         updateChart(timeFrame);
     });
 
-    // Automatically highlight the user's current plan
-    const currentPlan = document.getElementById('currentPlan').textContent;
-    selectPlan(currentPlan);
+    const currentPlan = document.getElementById('currentPlan').textContent.trim();
+    if (currentPlan) {
+        const currentPlanCard = document.querySelector(`.plan-card[data-plan="${currentPlan}"]`);
+        if (currentPlanCard) {
+            currentPlanCard.classList.add('border-danger');
+            currentPlanCard.querySelector('.overlay').style.opacity = '0';
+        }
+    }
 });
-
-function selectPlan(plan) {
-    document.getElementById('plan_input').value = plan;
-    document.querySelectorAll('.plan-card').forEach(card => {
-        card.classList.remove('border-danger');
-        card.querySelector('.overlay').style.opacity = '0.6';
-    });
-    const selectedCard = document.getElementById('card_' + plan.toLowerCase().replace('-', '_'));
-    selectedCard.classList.add('border-danger');
-    selectedCard.querySelector('.overlay').style.opacity = '0';
-}

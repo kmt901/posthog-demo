@@ -26,8 +26,9 @@ class LoginForm(FlaskForm):
     submit = SubmitField('Login')
 
 class ChangePlanForm(FlaskForm):
-    plan = HiddenField('Plan', validators=[DataRequired()])
+    plan = HiddenField('Plan')  # Remove DataRequired for debugging
     submit = SubmitField('Change Plan')
+
 
 class BlogPostForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired()])

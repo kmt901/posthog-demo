@@ -1,3 +1,5 @@
+# used to create some dummy data to show historical view count of movies in the profile etc. 
+
 from app import app, db
 from models import User, MovieStats
 from datetime import datetime, timedelta
