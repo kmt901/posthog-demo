@@ -70,6 +70,8 @@ device_properties = [
       "$device_type": "Mobile"
     }]
 
+plans = ['Free', 'Premium', 'Max-imal']
+
 def get_random_time():
     random_seconds = random.randint(0,args.number_of_days * 86400)
 
@@ -77,7 +79,6 @@ def get_random_time():
 
     return(random_timestamp)
 
-#plan_changed
 def capture_pageview(url, timestamp, client_properties, distinct_id):
    properties = {
       "$current_url": url,
@@ -119,20 +120,28 @@ def get_client_properties():
 # Get Amplitude data from folder, unzip it, and use the capture function 
 def browse_and_watch_movie(number = 1):
     client_properties = get_client_properties()
+    client_properties = { **client_properties,
+                         '$set': {
+                            'plan': random.choice(plans)
+                         }}
     distinct_id = fake.ascii_email()
     print(distinct_id)
 
-    
     for i in range(random.randint(1, number)):
-        start_timestamp = get_random_time()
+        timestamp = get_random_time()
+        client_properties["$session_id"]=fake.uuid4()
+        
+        capture_event(event='user_logged_in', extra_properties=client_properties, timestamp=timestamp, distinct_id=distinct_id)
 
-        capture_pageview(url='https://hogflix.net/', client_properties = client_properties,timestamp=start_timestamp, distinct_id = distinct_id)
+        timestamp = timestamp + timedelta(minutes=random.randint(1,5))
+
+        capture_pageview(url='https://hogflix.net/', client_properties = client_properties,timestamp=timestamp, distinct_id = distinct_id)
 
         movie_id = random.randint(1,3)
 
-        next_timestamp = start_timestamp + timedelta(minutes=random.randint(1,15))
+        timestamp = timestamp + timedelta(minutes=random.randint(1,15))
 
-        capture_pageview(url=f'https://hogflix.net/movie/{movie_id}', client_properties = client_properties, timestamp=next_timestamp, distinct_id = distinct_id)
+        capture_pageview(url=f'https://hogflix.net/movie/{movie_id}', client_properties = client_properties, timestamp=timestamp, distinct_id = distinct_id)
 
 def anon_browse_homepage_and_plans():
    client_properties = get_client_properties()
@@ -171,7 +180,17 @@ def browse_plans_and_signup():
    
    timestamp = timestamp + timedelta(minutes=random.randint(1,10))
    
-   capture_event(event='plan purchased', extra_properties=client_properties, timestamp=timestamp, distinct_id=distinct_id)
+   selected_plans = random.sample(plans,2)
+   previous_plan = selected_plans[0]
+   new_plan = selected_plans[1]
+   client_properties = { **client_properties,
+                        "previous_plan": previous_plan,
+                        "new_plan": new_plan,
+                        "$set": {
+                           "plan": new_plan
+                        }}
+   print(client_properties)
+   capture_event(event='plan_changed', extra_properties=client_properties, timestamp=timestamp, distinct_id=distinct_id)
 
 for i in range(args.number_of_iterations):
    print(args)
