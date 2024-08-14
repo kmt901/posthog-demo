@@ -118,7 +118,7 @@ def search_results():
 @app.route('/profile', methods=['GET', 'POST'])
 @login_required
 def profile():
-    form = ChangePlanForm()  # Create an instance of ChangePlanForm
+    form = ChangePlanForm()  
 
     if form.validate_on_submit():
         new_plan = form.plan.data
@@ -142,7 +142,6 @@ def profile():
 @login_required
 def settings():
     if request.method == 'POST':
-        # Handle settings form submission
         pass
     return render_template('settings.html', user=current_user)
 
