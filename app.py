@@ -166,6 +166,17 @@ def blog():
     posts = BlogPost.query.order_by(BlogPost.timestamp.desc()).all()
     return render_template('blog.html', posts=posts)
 
+@app.route('/delete_post/<int:post_id>', methods=['POST'])
+@login_required
+def delete_post(post_id):
+    if not current_user.is_admin:
+        return jsonify({'success': False, 'message': 'Unauthorized'}), 403
+
+    post = BlogPost.query.get_or_404(post_id)
+    db.session.delete(post)
+    db.session.commit()
+    return jsonify({'success': True})
+
 @app.route('/create_post', methods=['GET', 'POST'])
 @login_required
 def create_post():

@@ -6,6 +6,7 @@
 
 {% block head %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/profile.css') }}">
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
 {% endblock %}
 
 {% block content %}
@@ -77,4 +78,49 @@
         </div>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const maximalPlan = document.getElementById('card_maximal');
+    let confettiTriggered = false;
+
+    function triggerConfetti() {
+        if (!confettiTriggered) {
+            confettiTriggered = true;
+            
+            // Left side
+            confetti({
+                particleCount: 100,
+                spread: 60,
+                origin: { x: 0.8, y: 0.5 }
+            });
+            
+            // Right side
+            confetti({
+                particleCount: 100,
+                spread: 60,
+                origin: { x: 1, y: 0.5 }
+            });
+            
+            // Top
+            confetti({
+                particleCount: 100,
+                spread: 100,
+                origin: { x: 0.9, y: 0 }
+            });
+            
+            // Bottom
+            setTimeout(() => {
+                confetti({
+                    particleCount: 100,
+                    spread: 100,
+                    origin: { x: 0.9, y: 1 }
+                });
+            }, 250);
+        }
+    }
+
+    maximalPlan.addEventListener('mouseenter', triggerConfetti);
+});
+</script>
 {% endblock %}

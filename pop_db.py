@@ -1,9 +1,10 @@
 from app import app, db
-from models import Movie
+from models import Movie, User
 
 with app.app_context():
     db.create_all()  
 
+    # Add movies
     movie1 = Movie(
         title="Code & Quills", 
         description="Max, a brilliant hedgehog programmer, embarks on a thrilling journey to create the ultimate app, while navigating the quirks and joys of coding from his cozy home office.", 
@@ -23,9 +24,18 @@ with app.app_context():
         image_url="/static/images/hedgehog_data_scientist.png"  
     )
 
-    db.session.add(movie1)
-    db.session.add(movie2)
-    db.session.add(movie3)
+    db.session.add_all([movie1, movie2, movie3])
+
+    # Add admin user
+    admin_user = User(
+        username="admin",
+        email="admin@posthog.com",
+        plan="Premium",
+        is_admin=True
+    )
+    admin_user.set_password("admin")
+    db.session.add(admin_user)
+
     db.session.commit()
 
-    print("Movies added to the database!")
+    print("Movies and admin user added to the database!")
