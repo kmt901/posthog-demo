@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, HiddenField
+from wtforms import StringField, PasswordField, SubmitField, HiddenField, TextAreaField
 from wtforms.validators import DataRequired, Email, EqualTo, ValidationError
 from models import User
 
@@ -28,3 +28,8 @@ class LoginForm(FlaskForm):
 class ChangePlanForm(FlaskForm):
     plan = HiddenField('Plan', validators=[DataRequired()])
     submit = SubmitField('Change Plan')
+
+class BlogPostForm(FlaskForm):
+    title = StringField('Title', validators=[DataRequired()])
+    content = TextAreaField('Content', validators=[DataRequired()])
+    submit = SubmitField('Publish')

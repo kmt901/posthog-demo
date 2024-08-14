@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Plans Overview
+{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/profile.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1>Our Awesome Subscriptions</h1>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card text-center plan-card" id="card_free">
+                <img src="{{ url_for('static', filename='images/free_plan.png') }}" class="card-img-top" alt="Free Plan">
+                <div class="card-body">
+                    <h5 class="card-title">Free Plan</h5>
+                    <p class="card-text">Enjoy a limited selection of movies and shows for free.</p>
+                    <p class="card-text"><strong>Price: $0/month</strong></p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-center plan-card" id="card_premium">
+                <img src="{{ url_for('static', filename='images/premium_plan.png') }}" class="card-img-top" alt="Premium Plan">
+                <div class="card-body">
+                    <h5 class="card-title">Premium Plan</h5>
+                    <p class="card-text">Access to all movies and shows, including premium content.</p>
+                    <p class="card-text"><strong>Price: $9.99/month</strong></p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-center plan-card" id="card_maximal">
+                <img src="{{ url_for('static', filename='images/max_imal_plan.png') }}" class="card-img-top" alt="Max-imal Plan">
+                <div class="card-body">
+                    <h5 class="card-title">Max-imal Plan</h5>
+                    <p class="card-text">Get everything in Premium plus exclusive content and features. And Ultra HD</p>
+                    <p class="card-text"><strong>Price: $19.99/month</strong></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
