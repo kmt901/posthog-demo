@@ -114,7 +114,7 @@ def get_client_properties():
       **random.choice(device_properties),
       "$ip": fake.ipv4_public(),
       "$session_id": fake.uuid4(),
-      "active_feature_flags": ["action_mode_on"],
+      "$active_feature_flags": ["action_mode_on"],
       "$feature/action_mode_on": random.choice([True,False])
    }
    return properties

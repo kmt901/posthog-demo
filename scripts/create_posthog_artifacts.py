@@ -74,6 +74,39 @@ actions_data = [
                     "url_matching": "contains"
                 }
             ]
+        },
+        {
+            "name": "Select Free Plan",
+            "tags": ['demo'],
+            "steps": [
+                {
+                    "event": "$autocapture",
+                    "properties": None,
+                    "selector": ".container .col-md-4:nth-child(1) > .text-decoration-none"
+                }
+            ]
+        },
+        {
+            "name": "Select Premium Plan",
+            "tags": ['demo'],
+            "steps": [
+                {
+                    "event": "$autocapture",
+                    "properties": None,
+                    "selector": ".container .col-md-4:nth-child(2) > .text-decoration-none"
+                }
+            ]
+        },
+        {
+            "name": "Select Maxi-Mal Plan",
+            "tags": ['demo'],
+            "steps": [
+                {
+                    "event": "$autocapture",
+                    "properties": None,
+                    "selector": ".container .col-md-4:nth-child(3) > .text-decoration-none"
+                }
+            ]
         }
     ]
 
