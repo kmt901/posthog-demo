@@ -113,11 +113,12 @@ def get_client_properties():
    properties= {
       **random.choice(device_properties),
       "$ip": fake.ipv4_public(),
-      "$session_id": fake.uuid4()
+      "$session_id": fake.uuid4(),
+      "active_feature_flags": ["action_mode_on"],
+      "$feature/action_mode_on": random.choice([True,False])
    }
    return properties
 
-# Get Amplitude data from folder, unzip it, and use the capture function 
 def browse_and_watch_movie(number = 1):
     client_properties = get_client_properties()
     client_properties = { **client_properties,
