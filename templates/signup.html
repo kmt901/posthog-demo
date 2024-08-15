@@ -27,8 +27,11 @@
                             {{ form.password2.label(class="form-control-label") }}
                             {{ form.password2(class="form-control input-field") }}
                         </div>
+                        <div class="form-group form-check">
+                            {{ form.is_adult(class="form-check-input") }}
+                            {{ form.is_adult.label(class="form-check-label") }}
+                        </div>
                         <input type="hidden" id="plan_input" name="plan" value="">
-
 
                         <div class="form-group text-center">
                             {{ form.submit(class="btn btn-primary btn-lg btn-red") }}
@@ -103,5 +106,6 @@
             selectedCard.querySelector('.overlay').style.opacity = '0';
             console.log(`Plan selected: ${plan}`);
         }
-        </script>
+    </script>
+</div>
 {% endblock %}

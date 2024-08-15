@@ -7,8 +7,9 @@
 {% if query %}
 <p>Search results for: <strong>{{ query }}</strong></p>
 {% endif %}
-<div class="row">
-    {% for movie in movies %}
+
+<div id="family-movies" class="row">
+    {% for movie in family_movies %}
     <div class="col-md-4 mb-4">
         <div class="card">
             <img src="{{ movie.image_url }}" class="card-img-top" alt="{{ movie.title }}">
@@ -22,11 +23,35 @@
     </div>
     {% endfor %}
 </div>
+
+<div id="action-movies" class="row" style="display: none;">
+    {% for movie in action_movies %}
+    <div class="col-md-4 mb-4">
+        <div class="card">
+            <img src="{{ movie.image_url }}" class="card-img-top" alt="{{ movie.title }}">
+            <div class="overlay"></div>
+            <div class="card-body">
+                <h5 class="card-title">{{ movie.title }}</h5>
+                <p class="card-text">{{ movie.description }}</p>
+                <a href="/movie/{{ movie.id }}" class="btn btn-danger">Watch Now</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
 {% endblock %}
 
-
-
-
-
-
-
+{% block scripts %}
+<script>
+posthog.onFeatureFlags(function() {
+    if (posthog.isFeatureEnabled('action_mode_on')) {
+        document.getElementById('family-movies').style.display = 'none';
+        document.getElementById('action-movies').style.display = 'flex';
+    } else {
+        document.getElementById('family-movies').style.display = 'flex';
+        document.getElementById('action-movies').style.display = 'none';
+    }
+});
+</script>
+{% endblock %}

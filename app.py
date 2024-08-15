@@ -31,10 +31,20 @@ def load_user(id):
 
 @app.route('/')
 def index():
-    movies = Movie.query.all()
-    response = make_response(render_template('index.html', movies=movies))
+
+    family_movies = Movie.query.filter_by(genre='Family').all()
+    action_movies = Movie.query.filter_by(genre='Action').all()
+
+    response = make_response(render_template(
+        'index.html',
+        family_movies=family_movies,
+        action_movies=action_movies
+    ))
+
     response.delete_cookie('posthog_js')
+
     return response
+
 
 @app.route('/movie/<int:movie_id>')
 def movie(movie_id):
@@ -45,7 +55,6 @@ def movie(movie_id):
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     form = SignupForm()
-    # Get the plan from the URL parameter
     preselected_plan = request.args.get('plan')
 
     if request.method == 'POST':
@@ -57,7 +66,8 @@ def signup():
             user = User(
                 username=form.username.data,
                 email=form.email.data,
-                plan=plan
+                plan=plan,
+                is_adult=not form.is_adult.data  
             )
             user.set_password(form.password.data)
             db.session.add(user)
@@ -72,6 +82,7 @@ def signup():
     
     return render_template('signup.html', form=form, preselected_plan=preselected_plan)
 
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
@@ -83,18 +94,29 @@ def login():
         user = User.query.filter_by(username=form.username.data).first()
         
         if user is None or not user.check_password(form.password.data):
-            flash('Invalid username or password')
+            flash('Invalid username or password', 'error')
             return redirect(url_for('login'))
         
         login_user(user, remember=True)
-        posthog.identify(user.email)
-        posthog.capture(user.email, 'user_logged_in')
-        flash('Welcome back!')
+        
+        posthog.identify(
+            user.id,  
+            {
+                "email": user.email,
+                "username": user.username,
+                "is_adult": "Yes" if user.is_adult else "No"  
+            }
+        )
+        
+        posthog.capture(user.id, 'user_logged_in')
+
+        flash('Welcome back!', 'success') 
         
         next_page = request.args.get('next')
         return redirect(next_page or url_for('index'))
     
     return render_template('login.html', form=form)
+
 
 
 @app.route('/logout')
@@ -103,7 +125,8 @@ def logout():
         posthog.capture(current_user.email, 'user_logged_out')
     logout_user()
     flash('You have been logged out.')
-    return redirect(url_for('index'))
+    return redirect(url_for('index', reload='true'))
+
 
 @app.route('/search', methods=['POST'])
 @csrf.exempt  # Disable CSRF for this route for debugging. 

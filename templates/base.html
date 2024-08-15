@@ -12,8 +12,27 @@
         !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(o=t.createElement("script")).type="text/javascript",o.async=!0,o.src=s.api_host+"/static/array.js",(n=t.getElementsByTagName("script")[0]).parentNode.insertBefore(o,n);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},p="capture identify alias people.set people.set_once people.unset people.increment people.append people.union people.track_charge people.clear_charges people.delete_user".split(" "),r=0;r<p.length;r++)g(u,p[r]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
         posthog.init("{{ config['PH_PROJECT_KEY'] }}", { api_host: "{{ config['PH_HOST'] }}" });
     </script>
-    {% if request.cookies.posthog_js %}
-    {{ request.cookies.posthog_js | safe }}
+    {% if current_user.is_authenticated %}
+    <script>
+        posthog.identify(
+            "{{ current_user.id }}",
+            {
+                email: "{{ current_user.email }}",
+                username: "{{ current_user.username }}",
+                plan: "{{ current_user.plan }}"
+            }
+        );
+    </script>
+    {% else %}
+    <script>
+        posthog.reset(true);
+
+        // Check for the reload parameter and reload only once
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('reload') === 'true') {
+            window.location.href = window.location.pathname; // Reload without the query parameter
+        }
+    </script>
     {% endif %}
 </head>
 <body>
@@ -52,7 +71,6 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url_for('blog') }}">Blog</a>
                 </li>
-
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url_for('signup') }}">Sign Up</a>
                 </li>
@@ -96,5 +114,6 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.4.0/dist/confetti.browser.min.js"></script>
     <script src="{{ url_for('static', filename='js/confetti.js') }}"></script>
+    {% block scripts %}{% endblock %}
 </body>
 </html>

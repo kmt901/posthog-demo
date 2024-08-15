@@ -12,7 +12,8 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(150), unique=True, nullable=False)
     password_hash = db.Column(db.String(128), nullable=False)
     plan = db.Column(db.String(50), nullable=False) 
-    is_admin = db.Column(db.Boolean, default=False)  # New field
+    is_admin = db.Column(db.Boolean, default=False) 
+    is_adult = db.Column(db.Boolean, default=False)
 
     def set_password(self, password):
         self.password_hash = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
@@ -39,6 +40,7 @@ class Movie(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False)
     description = db.Column(db.String(500), nullable=False)
+    genre = db.Column(db.String(500), nullable=True)
     youtube_link = db.Column(db.String(200), nullable=False)
     image_url = db.Column(db.String(200), nullable=False)  
 
@@ -46,6 +48,7 @@ class Movie(db.Model):
         return {
             'id': self.id,
             'title': self.title,
+            'genre': self.genre,
             'description': self.description,
             'youtube_link': self.youtube_link,
             'image_url': self.image_url
