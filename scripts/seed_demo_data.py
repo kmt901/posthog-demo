@@ -73,7 +73,7 @@ device_properties = [
 plans = ['Free', 'Premium', 'Max-imal']
 
 def get_random_time():
-    random_seconds = random.randint(0,args.number_of_days * 86400)
+    random_seconds = random.randint(0,int(args.number_of_days) * 86400)
 
     random_timestamp = datetime.now() - timedelta(seconds = random_seconds)
 
@@ -193,7 +193,7 @@ def browse_plans_and_signup():
    print(client_properties)
    capture_event(event='plan_changed', extra_properties=client_properties, timestamp=timestamp, distinct_id=distinct_id)
 
-for i in range(args.number_of_iterations):
+for i in range(int(args.number_of_iterations)):
    print(args)
    browse_and_watch_movie(number = 10)
    anon_browse_homepage_and_plans()
