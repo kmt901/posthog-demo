@@ -65,7 +65,7 @@ You can then access the app on localhost:5000 or whatever the first port number 
 
 ## Seed historic usage data
 
-To be able to see valuable insights in your PostHog project you'll also need to add some historic event data.  The `seed_demo_data.py` script creates some pseudo-random data which looks like real usage of the HogFlix app.  You can run it as follows:
+To be able to see valuable insights in your PostHog project you'll also need to add some historic event data.  The `seed_demo_data.py` script creates some pseudo-random data which looks like real usage of the HogFlix app.  You'll need to have the `500_names_and_emails.csv` in your `scripts` folder (see below on how to generate this)  and then you can run it as follows:
 
 ```
 python scripts/seed_demo_data.py -k <Project API Key>  -p https://<eu or us>.i.posthog.com -d 30 -i 100
@@ -98,3 +98,13 @@ python scripts/create_posthog_artifacts.py -p "https://<eu or us>.posthog.com/ap
 The input parameters are:
 * -k the Project API key for your demo project
 * -h the API Endpoint for your PostHog Project 
+
+## Recreate the seed data
+
+The `500_names_and_emails.csv` file in the `scripts/` folder has dummy data for 500 users including some group (Family) information.  This reduces some of the randomness, assigns more than one user to some groups and allows you to generate data for the same users over time, more realisticly mirroring a real product.  You shouldn't need to but if for any reason you want to recreate this CSV first delete the older version in the `scripts/` folder and then run:
+
+```
+python scripts/generate_fake_names_and_emails.py     
+```
+
+Then copy the generated file back to the `scripts/` folder and you will be good to generate more demo data.

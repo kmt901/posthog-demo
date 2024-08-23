@@ -3,6 +3,7 @@ from datetime import datetime,timedelta
 from faker import Faker
 from argparse import ArgumentParser
 import random
+import csv
 from argparse import ArgumentParser
 
 days_to_generate = 30
@@ -28,6 +29,10 @@ posthog = Posthog(args.posthog_api_key,
 )
 
 fake = Faker() 
+
+with open('scripts/500_names_and_emails.csv', newline='') as csvfile:
+    csvreader = csv.DictReader(csvfile, delimiter=',')
+    fake_users = [row for row in csvreader]
 
 device_properties = [
     {
@@ -79,18 +84,18 @@ def get_random_time():
 
     return(random_timestamp)
 
-def capture_pageview(url, timestamp, client_properties, distinct_id):
+def capture_pageview(url, timestamp, client_properties, distinct_id, groups = {}):
    properties = {
       "$current_url": url,
       "$host": 'hogflix.net',
       "$pathname": url.replace('https://hogflix.net', ''),
       **client_properties
    }
-   capture_event('$pageview',properties,timestamp, distinct_id)
+   capture_event('$pageview',properties,timestamp, distinct_id, groups)
    
    
 # Convert and capture Amplitude data
-def capture_event(event, extra_properties, timestamp, distinct_id):
+def capture_event(event, extra_properties, timestamp, distinct_id, groups = {}):
 
   payload = {
     "event": event,
@@ -99,50 +104,68 @@ def capture_event(event, extra_properties, timestamp, distinct_id):
       "timestamp": timestamp,
       **extra_properties
     },
-    "timestamp": timestamp
+    "timestamp": timestamp,
+    "groups": groups
   }
 
   posthog.capture(
     event=payload["event"],
     distinct_id=payload["distinct_id"],
     properties=payload["properties"],
-    timestamp=payload["timestamp"]
+    timestamp=payload["timestamp"],
+    groups=payload["groups"]
   )
 
-def get_client_properties():
-   properties= {
-      **random.choice(device_properties),
-      "$ip": fake.ipv4_public(),
-      "$session_id": fake.uuid4(),
-      "$active_feature_flags": ["action_mode_on"],
-      "$feature/action_mode_on": random.choice([True,False])
-   }
+def get_client_properties(user = None):
+   if (user is not None):
+      properties= {
+         **random.choice(device_properties),
+         "$ip": user['ip'],
+         "$session_id": fake.uuid4(),
+         "$active_feature_flags": ["action_mode_on"],
+         "$feature/action_mode_on": True if user['is_adult'] == 'Yes' else False,
+         "$set": {
+            "email": user['email'],
+            "is_adult": user['is_adult'],
+            "plan": user['plan']
+         }
+      }
+   else:
+      properties= {
+         **random.choice(device_properties),
+         "$ip": fake.ipv4_public(),
+         "$session_id": fake.uuid4(),
+         "$active_feature_flags": ["action_mode_on"],
+         "$feature/action_mode_on": random.choice([True,False])
+      }
    return properties
 
 def browse_and_watch_movie(number = 1):
-    client_properties = get_client_properties()
-    client_properties = { **client_properties,
-                         '$set': {
-                            'plan': random.choice(plans)
-                         }}
-    distinct_id = fake.ascii_email()
-    print(distinct_id)
+   fake_user = random.choice(fake_users)
+   client_properties = get_client_properties(user=fake_user)
+   distinct_id = fake_user['email']
 
-    for i in range(random.randint(1, number)):
+   posthog.group_identify('family', fake_user['family_id'], {
+      'name': fake_user['last_name']
+   })
+    
+   groups = {'family': fake_user['family_id']}
+
+   for i in range(random.randint(1, number)):
         timestamp = get_random_time()
         client_properties["$session_id"]=fake.uuid4()
         
-        capture_event(event='user_logged_in', extra_properties=client_properties, timestamp=timestamp, distinct_id=distinct_id)
+        capture_event(event='user_logged_in', extra_properties=client_properties, timestamp=timestamp, distinct_id=distinct_id, groups=groups)
 
         timestamp = timestamp + timedelta(minutes=random.randint(1,5))
 
-        capture_pageview(url='https://hogflix.net/', client_properties = client_properties,timestamp=timestamp, distinct_id = distinct_id)
+        capture_pageview(url='https://hogflix.net/', client_properties = client_properties,timestamp=timestamp, distinct_id = distinct_id, groups=groups)
 
         movie_id = random.randint(1,3)
 
         timestamp = timestamp + timedelta(minutes=random.randint(1,15))
 
-        capture_pageview(url=f'https://hogflix.net/movie/{movie_id}', client_properties = client_properties, timestamp=timestamp, distinct_id = distinct_id)
+        capture_pageview(url=f'https://hogflix.net/movie/{movie_id}', client_properties = client_properties, timestamp=timestamp, distinct_id = distinct_id, groups=groups)
 
 def anon_browse_homepage_and_plans():
    client_properties = get_client_properties()
@@ -165,19 +188,27 @@ def anon_browse_homepage_and_plans():
    capture_pageview(url=f'https://hogflix.net/signup', client_properties = client_properties, timestamp=timestamp, distinct_id = distinct_id)
 
 def browse_plans_and_signup():
-   client_properties = get_client_properties()
-   distinct_id = fake.ascii_email()
+   fake_user = random.choice(fake_users)
+   client_properties = get_client_properties(user=fake_user)
+   distinct_id = fake_user['email']
    timestamp = get_random_time()
    print(distinct_id)
-   capture_pageview(url='https://hogflix.net/', client_properties = client_properties,timestamp=timestamp, distinct_id = distinct_id)
+
+   posthog.group_identify('family', fake_user['family_id'], {
+      'name': fake_user['last_name']
+   })
+    
+   groups = {'family': fake_user['family_id']}
+
+   capture_pageview(url='https://hogflix.net/', client_properties = client_properties,timestamp=timestamp, distinct_id = distinct_id, groups=groups)
    
    timestamp = timestamp + timedelta(minutes=random.randint(1,10))
    
-   capture_pageview(url=f'https://hogflix.net/plans', client_properties = client_properties, timestamp=timestamp, distinct_id = distinct_id)
+   capture_pageview(url=f'https://hogflix.net/plans', client_properties = client_properties, timestamp=timestamp, distinct_id = distinct_id, groups=groups)
 
    timestamp = timestamp + timedelta(minutes=random.randint(1,10))
    
-   capture_pageview(url=f'https://hogflix.net/signup', client_properties = client_properties, timestamp=timestamp, distinct_id = distinct_id)
+   capture_pageview(url=f'https://hogflix.net/signup', client_properties = client_properties, timestamp=timestamp, distinct_id = distinct_id, groups=groups)
    
    timestamp = timestamp + timedelta(minutes=random.randint(1,10))
    
@@ -191,7 +222,7 @@ def browse_plans_and_signup():
                            "plan": new_plan
                         }}
    print(client_properties)
-   capture_event(event='plan_changed', extra_properties=client_properties, timestamp=timestamp, distinct_id=distinct_id)
+   capture_event(event='plan_changed', extra_properties=client_properties, timestamp=timestamp, distinct_id=distinct_id, groups=groups)
 
 for i in range(int(args.number_of_iterations)):
    print(args)
