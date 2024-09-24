@@ -3,7 +3,7 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
-<h1 class="mb-4">Movie Catalogue</h1>
+<h1 id="movie-catalogue-title" class="mb-4">Movie Catalogue</h1>
 {% if query %}
 <p>Search results for: <strong>{{ query }}</strong></p>
 {% endif %}
@@ -40,18 +40,108 @@
     {% endfor %}
 </div>
 
-{% endblock %}
+<div id="signup-modal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <h2>Message from our Co-Founder James H.</h2>
+        <p>I suggest you sign up for our premium Max-imal plan!</p>
+        <a href="/signup?preselected_plan=Max-imal" class="modal-btn-signup">Okay, I'll do it</a>
+        <button type="button" class="modal-btn-close" id="close-modal">Go away!</button>
+        <img src="/static/images/james.png" alt="James" class="modal-image">
+    </div>
+</div>
 
-{% block scripts %}
-<script>
-posthog.onFeatureFlags(function() {
-    if (posthog.isFeatureEnabled('action_mode_on')) {
-        document.getElementById('family-movies').style.display = 'none';
-        document.getElementById('action-movies').style.display = 'flex';
-    } else {
-        document.getElementById('family-movies').style.display = 'flex';
-        document.getElementById('action-movies').style.display = 'none';
+<style>
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.85);
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
-});
+
+    .modal-content {
+        background-color: #111;
+        color: white;
+        padding: 40px;
+        border-radius: 10px;
+        text-align: center;
+        width: 90%;
+        max-width: 500px;
+        position: relative;
+    }
+
+    .modal-content h2 {
+        margin: 0 0 15px;
+        font-size: 1.8rem;
+        font-weight: bold;
+    }
+
+    .modal-content p {
+        margin: 0 0 25px;
+        font-size: 1.2rem;
+    }
+
+    .modal-btn-signup, .modal-btn-close {
+        display: inline-block;
+        padding: 12px 24px;
+        margin: 8px;
+        font-size: 1rem;
+        cursor: pointer;
+        border: none;
+        border-radius: 5px;
+        background-color: red;
+        color: white;
+        transition: background-color 0.3s;
+    }
+
+    .modal-btn-signup:hover, .modal-btn-close:hover {
+        background-color: #cc0000;
+    }
+
+    .modal-image {
+        position: absolute;
+        bottom: -10px;
+        right: 20px;
+        width: 120px;
+        height: auto;
+    }
+</style>
+
+<script>
+    posthog.onFeatureFlags(function() {
+        if (posthog.getFeatureFlag('james-experiment') === 'control') {
+            console.log('User is in the control group: No modal displayed.');
+        } else if (posthog.getFeatureFlag('james-experiment') === 'james-test') {
+            if (!localStorage.getItem('signup_modal_closed')) {
+                showModal();
+            }
+        } else {
+            console.log('Feature flag evaluation failed or user is not in any defined variant.');
+        }
+    });
+
+    function showModal() {
+        var modal = document.getElementById('signup-modal');
+        modal.style.display = 'flex';
+
+        document.getElementById('close-modal').addEventListener('click', function() {
+            modal.style.display = 'none';
+            localStorage.setItem('signup_modal_closed', 'true');
+        });
+
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = 'none';
+                localStorage.setItem('signup_modal_closed', 'true');
+            }
+        };
+    }
 </script>
+
 {% endblock %}

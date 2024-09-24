@@ -81,11 +81,13 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            var preselectedPlan = "{{ preselected_plan }}";
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const preselectedPlan = urlParams.get('preselected_plan');
             if (preselectedPlan) {
                 selectPlan(preselectedPlan);
             }
-        
+
             document.querySelector('form').addEventListener('submit', function(event) {
                 var planValue = document.getElementById('plan_input').value;
                 if (!planValue) {
@@ -94,7 +96,7 @@
                 }
             });
         });
-        
+
         function selectPlan(plan) {
             document.getElementById('plan_input').value = plan;
             document.querySelectorAll('.plan-card').forEach(card => {
