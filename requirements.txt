@@ -24,6 +24,7 @@ monotonic==1.6
 posthog==3.5.0
 PyMySQL==1.1.1
 python-dateutil==2.9.0.post0
+python-dotevn=1.0.1
 requests==2.31.0
 six==1.16.0
 slack-bolt==1.18.1
