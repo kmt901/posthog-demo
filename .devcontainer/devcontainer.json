@@ -1,0 +1,4 @@
+{
+    "image":"mcr.microsoft.com/devcontainers/universal:2",
+    "postCreateCommand": "pip install -r requirements.txt && python pop_db.py && python dummy_data.py"
+}

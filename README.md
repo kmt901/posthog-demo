@@ -30,7 +30,7 @@ python dummy_data.py
 
 This only needs to be done the first time you run the app.
 
-Next you'll need to set your PostHog Host and Project API key (available on the settings page) as Environment Variables:
+Next you'll need to set your PostHog Host and Project API key (available on the settings page) as Environment Variables. You can either rename '.env.example' to '.env' and update the placeholder variables therein, OR you can run the following:
 
 ```
 export PH_HOST='https://<eu or us>.i.posthog.com'
