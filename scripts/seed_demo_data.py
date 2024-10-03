@@ -30,7 +30,7 @@ posthog = Posthog(args.posthog_api_key,
 
 fake = Faker() 
 
-with open('scripts/500_names_and_emails.csv', newline='') as csvfile:
+with open('500_names_and_emails.csv', newline='') as csvfile:
     csvreader = csv.DictReader(csvfile, delimiter=',')
     fake_users = [row for row in csvreader]
 
