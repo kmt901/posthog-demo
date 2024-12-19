@@ -226,5 +226,10 @@ def page_not_found(e):
 def toc():
     return render_template('toc.html')
 
+@app.route('/feature-flags')
+@login_required  # Optional: restrict to logged-in users only
+def feature_flags():
+    return render_template('feature_flags.html')
+
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, host=app.config['APP_HOST'], port=app.config['APP_PORT'])

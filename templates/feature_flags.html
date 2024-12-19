@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title %}Feature Flags Test{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h2>PostHog Feature Flags Test</h2>
+    </div>
+    <div class="card-body">
+        <div class="mb-4">
+            <h4>Test Feature Flags</h4>
+            <div class="form-group">
+                <label for="flagKey">Feature Flag Key:</label>
+                <input type="text" class="form-control" id="flagKey" placeholder="Enter feature flag key">
+            </div>
+            <button class="btn btn-primary" onclick="checkFeatureFlag()">Check Flag</button>
+        </div>
+
+        <div class="mt-4">
+            <h4>Results:</h4>
+            <pre id="flagResult" class="bg-light p-3 rounded">Results will appear here...</pre>
+        </div>
+    </div>
+</div>
+
+<div class="mt-4">
+    <div class="alert alert-info">
+        <h5>How to use:</h5>
+        <ol>
+            <li>Create a feature flag in PostHog dashboard</li>
+            <li>Enter the feature flag key in the input field</li>
+            <li>Click "Check Flag" to see if the flag is enabled for the current user</li>
+        </ol>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function checkFeatureFlag() {
+    const flagKey = document.getElementById('flagKey').value;
+    if (!flagKey) {
+        document.getElementById('flagResult').textContent = 'Please enter a feature flag key';
+        return;
+    }
+
+    const isEnabled = posthog.isFeatureEnabled(flagKey);
+    const result = {
+        flagKey: flagKey,
+        isEnabled: isEnabled,
+        timestamp: new Date().toISOString()
+    };
+
+    document.getElementById('flagResult').textContent = JSON.stringify(result, null, 2);
+    
+    // Track the feature flag check
+    posthog.capture('feature_flag_checked', {
+        flag_key: flagKey,
+        result: isEnabled
+    });
+}
+</script>
+{% endblock %} 
