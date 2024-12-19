@@ -1,15 +1,17 @@
-# syntax=docker/dockerfile:1
-
 FROM python:3.12.5-slim-bookworm
 
-WORKDIR /python-docker
+# Set the working directory
+WORKDIR /app
 
+# Copy requirements and install dependencies
 COPY requirements.txt requirements.txt
-RUN pip3 install -r requirements.txt
+RUN pip3 install --no-cache-dir -r requirements.txt
 
-COPY . . 
+# Copy application files
+COPY . .
 
-RUN python pop_db.py
-RUN python dummy_data.py
+# Expose the port Flask listens on
+EXPOSE 8080
 
-CMD [ "flask", "run", "--host=0.0.0.0"]
+# Command to run the app with Gunicorn
+CMD ["gunicorn", "-b", "0.0.0.0:8080", "app:app"]
