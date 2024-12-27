@@ -13,7 +13,7 @@
                         {{ form.hidden_tag() }}
                         <div class="form-group">
                             {{ form.username.label(class="form-control-label") }}
-                            {{ form.username(class="form-control input-field") }}
+                            {{ form.username(class="form-control input-field", accesskey="u") }}
                         </div>
                         <div class="form-group">
                             {{ form.email.label(class="form-control-label") }}
@@ -29,7 +29,7 @@
                         </div>
                         <div class="form-group form-check">
                             {{ form.is_adult(class="form-check-input") }}
-                            {{ form.is_adult.label(class="form-check-label") }}
+                            {{ form.is_adult.label(class="form-check-label", accesskey="k") }}
                         </div>
                         <input type="hidden" id="plan_input" name="plan" value="">
 
@@ -51,7 +51,7 @@
                 <div class="card-body">
                     <h5 class="card-title">Free Plan</h5>
                     <p class="card-text">Enjoy a limited selection of movies and shows for free.</p>
-                    <button class="btn btn-outline-primary btn-block mt-3 btn-red" type="button">SELECT THIS</button>
+                    <button class="btn btn-outline-primary btn-block mt-3 btn-red" type="button" accesskey="f">SELECT THIS</button>
                 </div>
             </div>
         </div>
@@ -62,7 +62,7 @@
                 <div class="card-body">
                     <h5 class="card-title">Premium Plan</h5>
                     <p class="card-text">Access to all movies and shows, including premium content.</p>
-                    <button class="btn btn-outline-primary btn-block mt-3 btn-red" type="button">SELECT THIS</button>
+                    <button class="btn btn-outline-primary btn-block mt-3 btn-red" type="button" accesskey="z">SELECT THIS</button>
                 </div>
             </div>
         </div>
@@ -73,7 +73,7 @@
                 <div class="card-body">
                     <h5 class="card-title">Max-imal Plan</h5>
                     <p class="card-text">Get everything in Premium plus exclusive content and features.</p>
-                    <button class="btn btn-outline-primary btn-block mt-3 btn-red" type="button">SELECT THIS</button>
+                    <button class="btn btn-outline-primary btn-block mt-3 btn-red" type="button" accesskey="q">SELECT THIS</button>
                 </div>
             </div>
         </div>
