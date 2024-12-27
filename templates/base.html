@@ -37,24 +37,21 @@
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <a class="navbar-brand" href="/">
+        <a class="navbar-brand" href="/" accesskey="h">
             <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Hogflix Logo" style="height: 40px;">
         </a>
         <div class="collapse navbar-collapse" id="navbarNav">
             <form class="form-inline ml-auto" action="{{ url_for('search') }}" method="post">
-                <input class="form-control" type="search" placeholder="Search" aria-label="Search" name="query">
+                <input class="form-control" type="search" placeholder="Search" aria-label="Search" name="query" accesskey="q">
                 <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
             </form>
             <ul class="navbar-nav ml-auto">
                 {% if current_user.is_authenticated %}
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('plans') }}">Plans</a>
+                    <a class="nav-link" href="{{ url_for('plans') }}" accesskey="p">Plans</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('blog') }}">Blog</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('feature_flags') }}">Feature Flags</a>
+                    <a class="nav-link" href="{{ url_for('blog') }}" accesskey="b">Blog</a>
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -69,16 +66,16 @@
                 </li>
                 {% else %}
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('plans') }}">Plans</a>
+                    <a class="nav-link" href="{{ url_for('plans') }}" accesskey="p">Plans </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('blog') }}">Blog</a>
+                    <a class="nav-link" href="{{ url_for('blog') }}" accesskey="b">Blog</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('signup') }}">Sign Up</a>
+                    <a class="nav-link" href="{{ url_for('signup') }}" accesskey="s">Sign Up</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('login') }}">Login</a>
+                    <a class="nav-link" href="{{ url_for('login') }}" accesskey="l">Login</a>
                 </li>
                 {% endif %}
             </ul>
