@@ -23,7 +23,7 @@ with app.app_context():
         title="Data Spikes", 
         genre="Family",
         description="Donning his lab coat, Max delves into the world of data analysis, uncovering fascinating insights and solving complex problems, all from his sleek, modern office.", 
-        youtube_link="https://www.youtube.com/embed/dQw4w9WgXcQ",
+        youtube_link="https://www.youtube.com/embed/lYBUbBu4W08?si=b65lgJb43lzHLh5x",
         image_url="/static/images/hedgehog_data_scientist.png"  
     )
 

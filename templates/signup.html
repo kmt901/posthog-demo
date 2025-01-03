@@ -45,35 +45,35 @@
     <h3 class="text-center mt-5">Select a Plan</h3>
     <div class="row mt-3 justify-content-center">
         <div class="col-md-4">
-            <div class="card text-center plan-card" id="card_free" onclick="selectPlan('Free')">
+            <div class="card text-center plan-card" id="card_free" onclick="selectPlan('Free')" accesskey="f">
                 <img src="{{ url_for('static', filename='images/free_plan.png') }}" class="card-img-top" alt="Free Plan">
                 <div class="overlay"></div>
                 <div class="card-body">
                     <h5 class="card-title">Free Plan</h5>
                     <p class="card-text">Enjoy a limited selection of movies and shows for free.</p>
-                    <button class="btn btn-outline-primary btn-block mt-3 btn-red" type="button" accesskey="f">SELECT THIS</button>
+                    <button class="btn btn-outline-primary btn-block mt-3 btn-red" type="button">SELECT THIS</button>
                 </div>
             </div>
         </div>
         <div class="col-md-4">
-            <div class="card text-center plan-card" id="card_premium" onclick="selectPlan('Premium')">
+            <div class="card text-center plan-card" id="card_premium" onclick="selectPlan('Premium')" accesskey="z">
                 <img src="{{ url_for('static', filename='images/premium_plan.png') }}" class="card-img-top" alt="Premium Plan">
                 <div class="overlay"></div>
                 <div class="card-body">
                     <h5 class="card-title">Premium Plan</h5>
                     <p class="card-text">Access to all movies and shows, including premium content.</p>
-                    <button class="btn btn-outline-primary btn-block mt-3 btn-red" type="button" accesskey="z">SELECT THIS</button>
+                    <button class="btn btn-outline-primary btn-block mt-3 btn-red" type="button">SELECT THIS</button>
                 </div>
             </div>
         </div>
         <div class="col-md-4">
-            <div class="card text-center plan-card" id="card_maximal" onclick="selectPlan('Max-imal')">
+            <div class="card text-center plan-card" accesskey="q" id="card_maximal" onclick="selectPlan('Max-imal')">
                 <img src="{{ url_for('static', filename='images/max_imal_plan.png') }}" class="card-img-top" alt="Max-imal Plan">
                 <div class="overlay"></div>
                 <div class="card-body">
                     <h5 class="card-title">Max-imal Plan</h5>
                     <p class="card-text">Get everything in Premium plus exclusive content and features.</p>
-                    <button class="btn btn-outline-primary btn-block mt-3 btn-red" type="button" accesskey="q">SELECT THIS</button>
+                    <button class="btn btn-outline-primary btn-block mt-3 btn-red" type="button">SELECT THIS</button>
                 </div>
             </div>
         </div>
