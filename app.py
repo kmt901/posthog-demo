@@ -83,7 +83,7 @@ def signup():
                 }
             )
         
-            posthog.capture(form.username.data, 'user_signed_up')
+            posthog.capture(user.id, 'user_signed_up')
 
             flash('Congratulations, you are now a registered user!')
             return redirect(url_for('login'))
@@ -111,16 +111,16 @@ def login():
         
         login_user(user, remember=True)
         
-        posthog.identify(
-            user.id,  
-            {
-                "email": user.email,
-                "username": user.username,
-                "is_adult": "Yes" if user.is_adult else "No"  
-            }
-        )
+        # posthog.identify(
+        #     user.id,  
+        #     {
+        #         "email": user.email,
+        #         "username": user.username,
+        #         "is_adult": "Yes" if user.is_adult else "No"  
+        #     }
+        # )
         
-        posthog.capture(user.id, 'user_logged_in')
+        # posthog.capture(user.id, 'user_logged_in')
 
         flash('Welcome back!', 'success') 
         
@@ -245,4 +245,4 @@ def feature_flags():
     return render_template('feature_flags.html')
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, host=app.config['APP_HOST'], port=app.config['APP_PORT'])
