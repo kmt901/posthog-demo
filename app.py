@@ -17,7 +17,7 @@ app.config.from_object(DevelopmentConfig)
 # Initialize CSRF protection
 csrf = CSRFProtect(app)
 
-posthog = Posthog(app.config['PH_PROJECT_KEY'], host=app.config['PH_HOST'])
+posthog = Posthog(app.config['PH_PROJECT_KEY'], host=app.config['PH_HOST'], person_profiles="always")
 
 db.init_app(app)
 migrate = Migrate(app, db)
@@ -75,7 +75,7 @@ def signup():
             app.logger.debug(f"New user created: {user.username} with plan: {user.plan}")
             flash('Congratulations, you are now a registered user!')
             posthog.identify(
-            user.id,  
+            user.email,  
             {
                 "email": user.email,
                 "username": user.username,
@@ -109,11 +109,10 @@ def login():
         login_user(user, remember=True)
         
         posthog.identify(
-            user.id,  
+            user.email,  
             {
                 "email": user.email,
-                "username": user.username,
-                "is_adult": "Yes" if user.is_adult else "No"  
+                "username": user.username
             }
         )
         
