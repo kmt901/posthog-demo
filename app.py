@@ -77,8 +77,8 @@ def signup():
             posthog.identify(
                 form.username.data,  
                 {
-                    "email": form.username.data,
-                    "username": form.email.data,
+                    "email": form.email.data,
+                    "username": form.username.data,
                     "is_adult": "Yes" if form.is_adult.data else "No"  
                 }
             )
