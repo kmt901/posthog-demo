@@ -75,15 +75,15 @@ def signup():
             app.logger.debug(f"New user created: {user.username} with plan: {user.plan}")
 
             posthog.identify(
-                form.username.data,  
+                form.email.data,  
                 {
-                    "email": form.username.data,
-                    "username": form.email.data,
+                    "email": form.email.data,
+                    "username": form.username.data,
                     "is_adult": "Yes" if form.is_adult.data else "No"  
                 }
             )
         
-            posthog.capture(user.id, 'user_signed_up')
+            posthog.capture(user.email.data, 'user_signed_up')
 
             flash('Congratulations, you are now a registered user!')
             return redirect(url_for('login'))
