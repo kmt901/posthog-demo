@@ -75,7 +75,7 @@ def signup():
             app.logger.debug(f"New user created: {user.username} with plan: {user.plan}")
 
             posthog.identify(
-                form.email.data,  
+                form.username.data,  
                 {
                     "email": form.email.data,
                     "username": form.username.data,
@@ -83,7 +83,7 @@ def signup():
                 }
             )
         
-            posthog.capture(user.email.data, 'user_signed_up')
+            posthog.capture(form.username.data, 'user_signed_up')
 
             flash('Congratulations, you are now a registered user!')
             return redirect(url_for('login'))
@@ -111,16 +111,16 @@ def login():
         
         login_user(user, remember=True)
         
-        # posthog.identify(
-        #     user.id,  
-        #     {
-        #         "email": user.email,
-        #         "username": user.username,
-        #         "is_adult": "Yes" if user.is_adult else "No"  
-        #     }
-        # )
+        posthog.identify(
+            user.id,  
+            {
+                "email": user.email,
+                "username": user.username,
+                "is_adult": "Yes" if user.is_adult else "No"  
+            }
+        )
         
-        # posthog.capture(user.id, 'user_logged_in')
+        posthog.capture(user.id, 'user_logged_in')
 
         flash('Welcome back!', 'success') 
         
