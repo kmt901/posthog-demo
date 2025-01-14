@@ -74,15 +74,6 @@ def signup():
             db.session.commit()
             app.logger.debug(f"New user created: {user.username} with plan: {user.plan}")
             flash('Congratulations, you are now a registered user!')
-            posthog.identify(
-            user.email,  
-            {
-                "email": user.email,
-                "username": user.username,
-                "plan": plan,
-                "is_adult": "Yes" if user.is_adult else "No"  
-            }
-        )
             return redirect(url_for('login'))
         else:
             if 'plan' not in request.form or not request.form['plan']:
@@ -109,10 +100,11 @@ def login():
         login_user(user, remember=True)
         
         posthog.identify(
-            user.email,  
+            user.id,  
             {
                 "email": user.email,
-                "username": user.username
+                "username": user.username,
+                "is_adult": "Yes" if user.is_adult else "No"  
             }
         )
         
@@ -131,7 +123,6 @@ def logout():
     if current_user.is_authenticated:
         posthog.capture(current_user.email, 'user_logged_out')
     logout_user()
-    posthog.reset()
     flash('You have been logged out.')
     return redirect(url_for('index', reload='true'))
 
