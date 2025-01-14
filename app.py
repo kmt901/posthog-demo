@@ -17,7 +17,7 @@ app.config.from_object(DevelopmentConfig)
 # Initialize CSRF protection
 csrf = CSRFProtect(app)
 
-posthog = Posthog(app.config['PH_PROJECT_KEY'], host=app.config['PH_HOST'], person_profiles="always")
+posthog = Posthog(app.config['PH_PROJECT_KEY'], host=app.config['PH_HOST'])
 
 db.init_app(app)
 migrate = Migrate(app, db)
