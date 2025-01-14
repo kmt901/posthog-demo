@@ -123,6 +123,7 @@ def logout():
     if current_user.is_authenticated:
         posthog.capture(current_user.email, 'user_logged_out')
     logout_user()
+    posthog.reset()
     flash('You have been logged out.')
     return redirect(url_for('index', reload='true'))
 
