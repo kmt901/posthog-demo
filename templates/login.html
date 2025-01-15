@@ -27,9 +27,9 @@
             {% if category == 'success' %}
                 <script>
                     posthog.identify(
-                        "{{ current_user.id }}",  
+                        "{{ current_user.email }}",  
                         {
-                            email: "{{ current_user.email }}", 
+                            email: "{{ current_user.id }}", 
                             username: "{{ current_user.username }}",
                             is_adult: "{{ 'Yes' if current_user.is_adult else 'No' }}"  
                         }
