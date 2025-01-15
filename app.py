@@ -104,12 +104,19 @@ def login():
             return redirect(url_for('login'))
         
         login_user(user, remember=True)
+
+        posthog.identify(user.email, {
+            'id': user.id,
+            'email': user.email,
+            'username': user.username,
+            'plan': user.plan
+        })
         
         posthog.capture(
             user.email,  # Required - your user's ID
             event='user_logged_in',         # Required - name of the event
             properties={                
-                'time_date': formatted_time
+                'date_time': formatted_time
             }
         )
 
