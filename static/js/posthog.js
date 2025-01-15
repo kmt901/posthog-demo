@@ -1,8 +1,7 @@
-// posthog.js
-
+// Ensure the posthog-js library is correctly imported
 import posthog from 'posthog-js';
 
-posthog.init('phc_riCzwyMkRO7qRnhNLYfUIAehPc6V0U7Qudkv1a1XLu0', { api_host: 'https://eu.i.posthog.com', disable_web_experiments: false  });
+posthog.init('phc_riCzwyMkRO7qRnhNLYfUIAehPc6V0U7Qudkv1a1XLu0', { api_host: 'https://eu.i.posthog.com' });
 
 // Track page views
 posthog.capture('$pageview');
