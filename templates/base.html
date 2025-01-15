@@ -25,8 +25,6 @@
     </script>
     {% else %}
     <script>
-        posthog.reset(true);
-
         // Check for the reload parameter and reload only once
         const urlParams = new URLSearchParams(window.location.search);
         if (urlParams.get('reload') === 'true') {
