@@ -99,14 +99,14 @@ def login():
         
         login_user(user, remember=True)
         
-        posthog.identify(
-            user.id,  
-            {
-                "email": user.email,
-                "username": user.username,
-                "is_adult": "Yes" if user.is_adult else "No"  
-            }
-        )
+        # posthog.identify(
+        #     user.id,  
+        #     {
+        #         "email": user.email,
+        #         "username": user.username,
+        #         "is_adult": "Yes" if user.is_adult else "No"  
+        #     }
+        # )
         
         posthog.capture(user.id, 'user_logged_in')
 
