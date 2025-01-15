@@ -141,7 +141,6 @@ def logout():
 
     logout_user()
     flash('You have been logged out.')
-    posthog.reset()
     return redirect(url_for('index', reload='true'))
 
 
