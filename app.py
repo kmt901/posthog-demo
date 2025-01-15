@@ -1,4 +1,5 @@
 import logging
+from datetime import datetime
 from flask import Flask, render_template, redirect, url_for, flash, request, jsonify, make_response
 from config import DevelopmentConfig
 from models import db, User, Movie, MovieStats, BlogPost
@@ -18,6 +19,7 @@ app.config.from_object(DevelopmentConfig)
 csrf = CSRFProtect(app)
 
 posthog = Posthog(app.config['PH_PROJECT_KEY'], host=app.config['PH_HOST'])
+posthog.debug = True
 
 db.init_app(app)
 migrate = Migrate(app, db)
@@ -51,6 +53,9 @@ def movie(movie_id):
     movie = Movie.query.get_or_404(movie_id)
     return render_template('movie.html', movie=movie)
 
+current_time = datetime.now()
+formatted_time = current_time.strftime("%Y-%m-%d %H:%M:%S")
+# Output example: "2024-01-15 14:30:45"
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
@@ -73,6 +78,7 @@ def signup():
             db.session.add(user)
             db.session.commit()
             app.logger.debug(f"New user created: {user.username} with plan: {user.plan}")
+            posthog.capture(form.email.data, 'user_signed_up')
             flash('Congratulations, you are now a registered user!')
             return redirect(url_for('login'))
         else:
@@ -99,7 +105,13 @@ def login():
         
         login_user(user, remember=True)
         
-        # posthog.capture(user.email, 'user_logged_in')
+        posthog.capture(
+            user.email,  # Required - your user's ID
+            event='user_logged_in',         # Required - name of the event
+            properties={                
+                'time_date': formatted_time
+            }
+        )
 
         flash('Welcome back!', 'success') 
         
@@ -112,7 +124,14 @@ def login():
 @app.route('/logout')
 def logout():
     if current_user.is_authenticated:
-        posthog.capture(current_user.email, 'user_logged_out')
+        posthog.capture(
+            current_user.email,         # Required - your user's ID
+            event='user_logged_out',    # Required - name of the event       
+            properties={
+                'date_time': formatted_time
+            }
+        )
+
     logout_user()
     flash('You have been logged out.')
     posthog.reset()
