@@ -99,7 +99,7 @@ def login():
         
         login_user(user, remember=True)
         
-        posthog.capture(user.id, 'user_logged_in')
+        # posthog.capture(user.email, 'user_logged_in')
 
         flash('Welcome back!', 'success') 
         
