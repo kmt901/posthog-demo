@@ -29,9 +29,15 @@
                     posthog.identify(
                         "{{ current_user.email }}",  
                         {
-                            email: "{{ current_user.id }}", 
+                            email: "{{ current_user.email }}", 
                             username: "{{ current_user.username }}",
                             is_adult: "{{ 'Yes' if current_user.is_adult else 'No' }}"  
+                        }
+                    );
+                    posthog.capture('user_logged_in',
+                        {                
+                            date_time: formatted_time,
+                            email: current_user.email
                         }
                     );
                 </script>
