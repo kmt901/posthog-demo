@@ -57,6 +57,13 @@ current_time = datetime.now()
 formatted_time = current_time.strftime("%Y-%m-%d %H:%M:%S")
 # Output example: "2024-01-15 14:30:45"
 
+PLAN_PRICES = {
+    "Premium": 9.99,
+    "Maxi-mal": 19.99,
+    "Free": 0
+}
+
+
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     form = SignupForm()
@@ -64,7 +71,7 @@ def signup():
 
     if request.method == 'POST':
         app.logger.debug(f"Form data received: {request.form}")
-        plan = request.form.get('plan')
+        plan = request.form.get('plan')  # Get plan from form data
         app.logger.debug(f"Plan value: {plan}")
         
         if form.validate_on_submit() and plan in ['Free', 'Premium', 'Max-imal']:
@@ -78,7 +85,20 @@ def signup():
             db.session.add(user)
             db.session.commit()
             app.logger.debug(f"New user created: {user.username} with plan: {user.plan}")
-            posthog.capture(form.email.data, 'user_signed_up')
+            posthog.capture(form.email.data, 
+                event='user_signed_up', 
+                properties = {
+                    'plan': plan,
+                    'date_time': formatted_time
+                }
+            )
+            posthog.capture(form.email.data, 
+                event= "plan_purchase", 
+                properties = {
+                    'plan': plan,
+                    'amount': PLAN_PRICES.get(plan, 0)  # Returns 0 if plan not found
+                }
+            )
             flash('Congratulations, you are now a registered user!')
             return redirect(url_for('login'))
         else:
@@ -90,6 +110,7 @@ def signup():
 
 
 @app.route('/login', methods=['GET', 'POST'])
+
 def login():
     if current_user.is_authenticated:
         return redirect(url_for('index'))
@@ -104,13 +125,6 @@ def login():
             return redirect(url_for('login'))
         
         login_user(user, remember=True)
-
-        posthog.identify(user.email, {
-            'id': user.id,
-            'email': user.email,
-            'username': user.username,
-            'plan': user.plan
-        })
         
         posthog.capture(
             user.email,  # Required - your user's ID
@@ -249,4 +263,5 @@ def feature_flags():
     return render_template('feature_flags.html')
 
 if __name__ == '__main__':
-    app.run(debug=True, host=app.config['APP_HOST'], port=app.config['APP_PORT'])
+    # app.run(debug=True, host=app.config['APP_HOST'], port=app.config['APP_PORT'])
+    app.run(debug=True)
