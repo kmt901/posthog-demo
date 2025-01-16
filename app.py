@@ -125,14 +125,7 @@ def login():
             return redirect(url_for('login'))
         
         login_user(user, remember=True)
-        
-        posthog.capture(
-            user.email,  # Required - your user's ID
-            event='user_logged_in',         # Required - name of the event
-            properties={                
-                'date_time': formatted_time
-            }
-        )
+    
 
         flash('Welcome back!', 'success') 
         
