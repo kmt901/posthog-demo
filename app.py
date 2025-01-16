@@ -59,7 +59,7 @@ formatted_time = current_time.strftime("%Y-%m-%d %H:%M:%S")
 
 PLAN_PRICES = {
     "Premium": 9.99,
-    "Maxi-mal": 19.99,
+    "Max-imal": 19.99,
     "Free": 0
 }
 
