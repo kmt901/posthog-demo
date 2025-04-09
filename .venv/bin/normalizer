@@ -1,4 +1,4 @@
-#!/workspaces/posthog-demo-3000/.venv/bin/python3
+#!/Users/kaya/Development/posthog-demo/.venv/bin/python3.13
 # -*- coding: utf-8 -*-
 import re
 import sys

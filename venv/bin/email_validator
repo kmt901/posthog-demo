@@ -1,4 +1,4 @@
-#!/Users/seb/Dev/venv/bin/python3
+#!/Users/kaya/Development/posthog-demo/venv/bin/python3.13
 # -*- coding: utf-8 -*-
 import re
 import sys
