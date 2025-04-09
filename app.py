@@ -19,7 +19,6 @@ app.config.from_object(DevelopmentConfig)
 csrf = CSRFProtect(app)
 
 posthog = Posthog(app.config['PH_PROJECT_KEY'], host=app.config['PH_HOST'])
-posthog.exception_capture = ExceptionCapture(posthog)
 posthog.debug = True
 
 db.init_app(app)
@@ -245,8 +244,6 @@ def create_post():
 
 @app.errorhandler(404)
 def page_not_found(e):
-    print(e)
-    print(posthog)
     posthog.capture_exception(e)
     return render_template('404.html'), 404
 
