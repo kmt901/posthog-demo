@@ -162,6 +162,15 @@ def search():
 def search_results():
     query = request.args.get('query')
     movies = Movie.query.filter(Movie.title.like(f'%{query}%')).all()
+    if not movies and current_user.is_authenticated:
+        posthog.capture(
+            current_user.email,
+            event='movie_not_found',
+            properties={
+                'date_time': formatted_time,
+                'query': query
+            }
+        )
     return render_template('search_results.html', query=query, movies=movies)
 
 @app.route('/profile', methods=['GET', 'POST'])
@@ -244,7 +253,6 @@ def create_post():
 
 @app.errorhandler(404)
 def page_not_found(e):
-    posthog.capture_exception(e)
     return render_template('404.html'), 404
 
 @app.route('/toc')
